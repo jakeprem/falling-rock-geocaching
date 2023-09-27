@@ -11,6 +11,9 @@ const parsedFields: string[] = results.meta.fields as string[];
 const createLink = (coords: Coordinates) =>
   `https://www.google.com/maps/search/?api=1&query=${coords.getLatitude()},${coords.getLongitude()}`;
 
+const createWalkingLink = (coords: Coordinates) =>
+  `https://www.google.com/maps/dir/?api=1&destination=${coords.getLatitude()},${coords.getLongitude()}&travelmode=walking`;
+
 const formattedData = data.map((cache: Cache) => {
   const parsedCoords = new Coordinates(`${cache.Latitude} ${cache.Longitude}`);
 
@@ -19,9 +22,9 @@ const formattedData = data.map((cache: Cache) => {
     Latitude: parsedCoords.getLatitude(),
     Longitude: parsedCoords.getLongitude(),
     link: createLink(parsedCoords),
+    walkingLink: createWalkingLink(parsedCoords),
   };
 });
-console.log(formattedData);
 
 const allFields = [...parsedFields, "link"];
 

@@ -1,5 +1,4 @@
 import { CacheGrid } from "./components/CacheGrid";
-import { CacheTable } from "./components/CacheTable";
 
 function App() {
   return (
@@ -15,7 +14,6 @@ function App() {
           </header>
         </div>
         <CacheGrid />
-        {/* <CacheTable /> */}
       </main>
     </>
   );

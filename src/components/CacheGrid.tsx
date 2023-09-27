@@ -1,7 +1,7 @@
 import QRCode from "react-qr-code";
 
-import { fields, caches } from "../csv-parser";
-import { Cache } from "../types";
+import { caches } from "../csv-parser";
+import type { Cache } from "../types";
 import { useState } from "react";
 
 export const CacheGrid = () => {
@@ -17,7 +17,7 @@ export const CacheGrid = () => {
   );
 };
 
-const CacheCard = ({ cache }) => {
+const CacheCard = ({ cache }: { cache: Cache }) => {
   const [hint, setHint] = useState(false);
 
   return (

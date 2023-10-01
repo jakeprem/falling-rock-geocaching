@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
 import type { Cache } from "../types";
 import { caches } from "../csv-parser";
 import "leaflet/dist/leaflet.css";
-import { LatLngTuple } from "leaflet";
+import type { LatLngTuple } from "leaflet";
 
 export function CacheMap() {
   const center = useMemo<LatLngTuple>(() => {

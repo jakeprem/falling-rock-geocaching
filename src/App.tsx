@@ -1,8 +1,11 @@
-import { CacheGrid } from "./components/CacheGrid";
+import { Outlet } from "react-router-dom";
+
+import { NavBar } from "./components/NavBar";
 
 function App() {
   return (
     <>
+      <NavBar />
       <main className="container mx-auto">
         <div className="py-10">
           <header>
@@ -13,7 +16,7 @@ function App() {
             </div>
           </header>
         </div>
-        <CacheGrid />
+        <Outlet />
       </main>
     </>
   );

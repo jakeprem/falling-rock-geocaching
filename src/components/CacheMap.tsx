@@ -3,9 +3,10 @@ import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
 import type { Cache } from "../types";
 import { caches } from "../csv-parser";
 import "leaflet/dist/leaflet.css";
+import { LatLngTuple } from "leaflet";
 
 export function CacheMap() {
-  const center = useMemo(() => {
+  const center = useMemo<LatLngTuple>(() => {
     const cacheLength = caches.length;
     const latAvg =
       caches.reduce((acc, cache) => acc + cache.Latitude, 0) / cacheLength;
@@ -13,7 +14,7 @@ export function CacheMap() {
       caches.reduce((acc, cache) => acc + cache.Longitude, 0) / cacheLength;
 
     return [latAvg, longAvg];
-  }, [caches]);
+  }, []);
 
   return (
     <MapContainer

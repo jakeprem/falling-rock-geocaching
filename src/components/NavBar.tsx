@@ -1,6 +1,6 @@
 export const NavBar = () => {
   return (
-    <nav classNameName="bg-white shadow">
+    <nav className="bg-white shadow">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -135,7 +135,7 @@ export const NavBar = () => {
                   href="#"
                   className="block px-4 py-2 text-sm text-gray-700"
                   role="menuitem"
-                  tabIndex="-1"
+                  tabIndex={-1}
                   id="user-menu-item-2"
                 >
                   Sign out

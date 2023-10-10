@@ -1,11 +1,11 @@
 import Papa from "papaparse";
 import Coordinates from "coordinate-parser";
 import csvData from "./csv-data";
-import { Cache } from "./types";
+import type { Cache, RawCache } from "./types";
 
 const results = Papa.parse(csvData, { header: true });
 
-const data: Cache[] = results.data as Cache[];
+const data: RawCache[] = results.data as RawCache[];
 const parsedFields: string[] = results.meta.fields as string[];
 
 const createLink = (coords: Coordinates) =>
@@ -14,7 +14,7 @@ const createLink = (coords: Coordinates) =>
 const createWalkingLink = (coords: Coordinates) =>
   `https://www.google.com/maps/dir/?api=1&destination=${coords.getLatitude()},${coords.getLongitude()}&travelmode=walking`;
 
-const formattedData = data.map((cache: Cache) => {
+const formattedData = data.map((cache: RawCache): Cache => {
   const parsedCoords = new Coordinates(`${cache.Latitude} ${cache.Longitude}`);
 
   return {
@@ -23,10 +23,11 @@ const formattedData = data.map((cache: Cache) => {
     Longitude: parsedCoords.getLongitude(),
     link: createLink(parsedCoords),
     walkingLink: createWalkingLink(parsedCoords),
+    Hidden: cache.Hidden === "Y",
   };
 });
 
 const allFields = [...parsedFields, "link"];
 
 export const fields = allFields;
-export const caches = formattedData;
+export const caches = formattedData.filter((cache) => !cache.Hidden);

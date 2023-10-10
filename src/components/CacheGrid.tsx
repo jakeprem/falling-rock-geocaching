@@ -23,7 +23,7 @@ const CacheCard = ({ cache }: { cache: Cache }) => {
   return (
     <li
       key={cache.Cache}
-      className="col-span-1 flex flex-col divid-y divide-gray-200 rounded-lg bg-white text-center shadow"
+      className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow"
     >
       <div className="flex flex-1 flex-col p-8">
         <QRCode
@@ -46,7 +46,7 @@ const CacheCard = ({ cache }: { cache: Cache }) => {
         )}
       </div>
       <div>
-        <div className="-mt-px flex divide-x divide-gray-200">
+        <div className="-mt-px flex divide-x divide-gray-200 print:hidden">
           <div className="flex w-0 flex-1">
             <a
               href={cache.link}

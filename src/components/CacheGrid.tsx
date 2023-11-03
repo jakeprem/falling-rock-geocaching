@@ -3,6 +3,66 @@ import QRCode from "react-qr-code";
 import { caches } from "../csv-parser";
 import type { Cache } from "../types";
 import { useState } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { parse } from "svg-parser";
+
+const ParsedSVG = ({ caches }: { caches: Cache[] }) => {
+  const svgNodes = caches.map((cache) => {
+    return <QRCode value={cache.link} size={256} />;
+  });
+  console.log("svgNodes", svgNodes);
+
+  const svgMarkups = svgNodes.map((node) => renderToStaticMarkup(node));
+  console.log("svgMarkups", svgMarkups);
+
+  const parsedSVGs = svgMarkups.map((markup) => {
+    return parse(markup);
+  });
+
+  console.log("parsedSVGs", parsedSVGs);
+
+  const mappedSvgs = parsedSVGs.map((svg) => {
+    return handleNode(svg);
+  });
+  console.log("mappedSvgs", mappedSvgs);
+
+  return <></>;
+};
+
+const PDFQrCode = (props) => {
+  const markup = renderToStaticMarkup(<QRCode ...props>);
+  const nodes = parse(markup);
+  const svg = handleNode(nodes);
+};
+
+const svgMappings = {
+  svg: "Svg",
+  path: "Path",
+  rect: "Rect",
+  circle: "Circle",
+  ellipse: "Ellipse",
+  line: "Line",
+  text: "Text",
+  tspan: "Tspan",
+  g: "G",
+  stop: "Stop",
+  defs: "Defs",
+  clipPath: "ClipPath",
+  linearGradient: "LinearGradient",
+  radialGradient: "RadialGradient",
+  pattern: "Pattern",
+};
+
+const handleNode = (node: any) => {
+  const children = node.children.map(handleNode);
+
+  if (node.type === "root") {
+    return children[0];
+  } else {
+    const tag = svgMappings[node.tagName] || `default: ${node.tagName}`;
+    return [tag, node.properties, children];
+  }
+};
 
 export const CacheGrid = () => {
   return (
@@ -13,6 +73,7 @@ export const CacheGrid = () => {
       {caches.map((cache) => (
         <CacheCard key={cache.Cache} cache={cache} />
       ))}
+      <ParsedSVG caches={caches} />
     </ul>
   );
 };

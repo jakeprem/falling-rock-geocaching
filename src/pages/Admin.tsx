@@ -7,6 +7,7 @@ import { caches as parsedCaches } from "../csv-parser";
 const uploadCaches = async (pb: PocketBase) => {
   const cfrCollection = await pb.collection("collections").create({
     name: "CFR Geocaching",
+    short_name: "cfr",
     description: "Caches placed all around Camp Falling Rock",
     visible: true,
   });

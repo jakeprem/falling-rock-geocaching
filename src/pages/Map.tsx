@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Ref, useEffect, useMemo, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
 import { usePocketBase } from "../hooks";
 import type PocketBase from "pocketbase";
@@ -23,7 +23,13 @@ const calculateCenter = (caches: Cache[]) => {
   return [latAvg, longAvg];
 };
 
-function DisplayPosition({ map, caches }) {
+function DisplayPosition({
+  map,
+  caches,
+}: {
+  map: typeof MapContainer;
+  caches: Cache[];
+}) {
   useEffect(() => {
     const center = calculateCenter(caches);
 
@@ -36,16 +42,16 @@ function DisplayPosition({ map, caches }) {
 export function MapPage() {
   const pb = usePocketBase();
 
-  const [map, setMap] = useState<MapContainer | null>(null);
+  const [map, setMap] = useState<Ref<Map> | null>(null);
   const [caches, setCaches] = useState<Cache[]>([]);
 
   useEffect(() => {
     loadCaches(pb).then((collection) => {
-      const {
-        expand: { "caches(collection)": caches },
-      } = collection;
+      const loadedCaches = collection?.expand
+        ? collection.expand["caches(collection)"]
+        : [];
 
-      setCaches(caches);
+      setCaches(loadedCaches);
     });
   });
 

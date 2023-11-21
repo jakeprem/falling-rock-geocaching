@@ -16,9 +16,9 @@ const loadCaches = async (pb: PocketBase, shortName: string) => {
       expand: "caches(collection)",
     })
     .then((collection) => {
-      const {
-        expand: { "caches(collection)": caches },
-      } = collection;
+      const caches = collection?.expand
+        ? collection.expand["caches(collection)"]
+        : [];
 
       return { collection, caches };
     });

@@ -19,6 +19,11 @@ import { AdminPage } from "./pages/Admin.tsx";
 const PB_URL = import.meta.env.VITE_PB_URL;
 const pb = new PocketBase(PB_URL);
 
+declare global {
+  interface Window {
+    pb: PocketBase;
+  }
+}
 window.pb = pb;
 
 const router = createBrowserRouter(

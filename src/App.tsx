@@ -1,4 +1,6 @@
-import { CacheGrid } from "./pages/CacheGrid";
+// import { CacheGrid } from "./pages/CacheGrid";
+
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
@@ -12,7 +14,7 @@ function App() {
           </div>
         </header>
       </div>
-      <CacheGrid />
+      <Outlet />
     </main>
   );
 }

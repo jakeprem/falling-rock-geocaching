@@ -11,6 +11,9 @@ import PocketBase from "pocketbase";
 import App from "./App.tsx";
 import "./index.css";
 import { PocketBaseProvider } from "./hooks";
+
+import { CacheGrid } from "./pages/CacheGrid.tsx";
+import { MapPage } from "./pages/Map.tsx";
 import { AdminPage } from "./pages/Admin.tsx";
 
 const PB_URL = import.meta.env.VITE_PB_URL;
@@ -22,7 +25,9 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<div>404</div>}>
       <Route path="admin" element={<AdminPage />} />
-      <Route path="map" element={<div>Map</div>} />
+      <Route path="map" element={<MapPage />} />
+      <Route path=":shortName" element={<CacheGrid />} />
+      <Route path="" element={<div>You'll have to be more specific!</div>} />
     </Route>
   )
 );

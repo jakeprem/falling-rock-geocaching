@@ -7,21 +7,33 @@ import { useEffect, useMemo, useState } from "react";
 import { usePocketBase } from "../hooks";
 
 import { createWalkingLink } from "../utils";
+import { useParams } from "react-router";
 
-const loadCaches = async (pb: PocketBase) => {
-  return await pb.collection("caches").getFullList<Cache>();
+const loadCaches = async (pb: PocketBase, shortName: string) => {
+  return await pb
+    .collection("collections")
+    .getFirstListItem(`short_name="${shortName}"`, {
+      expand: "caches(collection)",
+    })
+    .then((collection) => {
+      const {
+        expand: { "caches(collection)": caches },
+      } = collection;
+
+      return { collection, caches };
+    });
 };
 
 export const CacheGrid = () => {
   const pb = usePocketBase();
   const [caches, setCaches] = useState<Cache[]>([]);
+  const { shortName = "cfr" } = useParams();
 
   useEffect(() => {
-    loadCaches(pb).then((caches) => {
-      console.log(caches);
+    loadCaches(pb, shortName).then(({ caches }) => {
       setCaches(caches);
     });
-  }, [pb]);
+  }, [pb, shortName]);
 
   return (
     <ul

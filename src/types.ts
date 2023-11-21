@@ -1,4 +1,14 @@
 export type Cache = {
+  id: string;
+  name: string;
+  description: string;
+  hint: string;
+  location: string;
+  latitude: string;
+  longitude: string;
+};
+
+export type ParsedCache = {
   Cache: string;
   Rating: string;
   Type: string;

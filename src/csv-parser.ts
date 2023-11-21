@@ -1,7 +1,7 @@
 import Papa from "papaparse";
 import Coordinates from "coordinate-parser";
 import csvData from "./csv-data";
-import type { Cache, RawCache } from "./types";
+import type { ParsedCache as Cache, RawCache } from "./types";
 
 const results = Papa.parse(csvData, { header: true });
 

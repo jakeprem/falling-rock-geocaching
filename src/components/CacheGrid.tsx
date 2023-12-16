@@ -23,6 +23,7 @@ import type { Cache } from "../types";
 import { createElement, useState } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { parse } from "svg-parser";
+import ButtonLink from "./Button";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const PDFQrCode = (props: any) => {
@@ -117,9 +118,11 @@ export const CacheGrid = () => {
   if (instance.error) return <span>{instance.error}</span>;
   return (
     <>
-      <a href={instance.url || ""} target="_blank">
-        Print PDF of Caches
-      </a>
+      <div className="my-4">
+        <ButtonLink href={instance.url || ""} target="_blank">
+          Print PDF of Caches
+        </ButtonLink>
+      </div>
       <WebCacheGrid />
     </>
   );

@@ -1,56 +1,51 @@
 import QRCode from "react-qr-code";
 
+import { Document, Page, Text, View, usePDF } from "@react-pdf/renderer";
+import {
+  Svg,
+  Path,
+  Rect,
+  Circle,
+  Ellipse,
+  Line,
+  // Text,
+  Tspan,
+  G,
+  Stop,
+  Defs,
+  ClipPath,
+  LinearGradient,
+  RadialGradient,
+} from "@react-pdf/renderer";
+
 import { caches } from "../csv-parser";
 import type { Cache } from "../types";
-import { useState } from "react";
+import { createElement, useState } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { parse } from "svg-parser";
 
-const ParsedSVG = ({ caches }: { caches: Cache[] }) => {
-  const svgNodes = caches.map((cache) => {
-    return <QRCode value={cache.link} size={256} />;
-  });
-  console.log("svgNodes", svgNodes);
-
-  const svgMarkups = svgNodes.map((node) => renderToStaticMarkup(node));
-  console.log("svgMarkups", svgMarkups);
-
-  const parsedSVGs = svgMarkups.map((markup) => {
-    return parse(markup);
-  });
-
-  console.log("parsedSVGs", parsedSVGs);
-
-  const mappedSvgs = parsedSVGs.map((svg) => {
-    return handleNode(svg);
-  });
-  console.log("mappedSvgs", mappedSvgs);
-
-  return <></>;
-};
-
 const PDFQrCode = (props) => {
-  const markup = renderToStaticMarkup(<QRCode ...props>);
+  const qrNode = createElement(QRCode, props);
+  const markup = renderToStaticMarkup(qrNode);
   const nodes = parse(markup);
-  const svg = handleNode(nodes);
+  return handleNode(nodes);
 };
 
 const svgMappings = {
-  svg: "Svg",
-  path: "Path",
-  rect: "Rect",
-  circle: "Circle",
-  ellipse: "Ellipse",
-  line: "Line",
-  text: "Text",
-  tspan: "Tspan",
-  g: "G",
-  stop: "Stop",
-  defs: "Defs",
-  clipPath: "ClipPath",
-  linearGradient: "LinearGradient",
-  radialGradient: "RadialGradient",
-  pattern: "Pattern",
+  svg: Svg,
+  path: Path,
+  rect: Rect,
+  circle: Circle,
+  ellipse: Ellipse,
+  line: Line,
+  text: Text,
+  tspan: Tspan,
+  g: G,
+  stop: Stop,
+  defs: Defs,
+  clipPath: ClipPath,
+  linearGradient: LinearGradient,
+  radialGradient: RadialGradient,
 };
 
 const handleNode = (node: any) => {
@@ -60,11 +55,77 @@ const handleNode = (node: any) => {
     return children[0];
   } else {
     const tag = svgMappings[node.tagName] || `default: ${node.tagName}`;
-    return [tag, node.properties, children];
+
+    return createElement(tag, node.properties, children);
   }
 };
 
+const CacheDocument = ({ caches }: { caches: Cache[] }) => {
+  return (
+    <Document>
+      <Page size="A4" style={{ paddingHorizontal: 24, paddingVertical: 40 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "flex-start",
+            alignItems: "flex-end",
+          }}
+        >
+          {caches.map((cache) => {
+            return (
+              <View
+                key={cache.Cache}
+                wrap={false}
+                style={{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                  maxWidth: "25%",
+                  // maxHeight: "25%",
+                  marginHorizontal: 64,
+                  marginBottom: 24,
+                }}
+              >
+                <PDFQrCode key={cache.Cache} value={cache.link} size={200} />
+                <Text style={{ fontSize: 12, marginTop: 5 }}>
+                  {cache.Cache}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+        <View fixed style={{ fontSize: 12, alignItems: "flex-end" }}>
+          <Text>Camp Falling Rock | Geocaching</Text>
+        </View>
+      </Page>
+    </Document>
+  );
+};
+
 export const CacheGrid = () => {
+  const [instance, updateInstance] = usePDF({
+    document: <CacheDocument caches={caches} />,
+  });
+
+  if (instance.loading) return <span>Loading...</span>;
+  if (instance.error) return <span>{instance.error.message}</span>;
+  return (
+    <>
+      <a href={instance.url} target="_blank">
+        Print PDF of Caches
+      </a>
+      <WebCacheGrid />
+    </>
+  );
+};
+
+const WebCacheGrid = () => {
+  let pdfCaches = caches.map((cache) => {
+    return <PDFQrCode value={cache.link} size={256} />;
+  });
+  console.log("pdfCaches", pdfCaches);
+
   return (
     <ul
       role="list"
@@ -73,7 +134,6 @@ export const CacheGrid = () => {
       {caches.map((cache) => (
         <CacheCard key={cache.Cache} cache={cache} />
       ))}
-      <ParsedSVG caches={caches} />
     </ul>
   );
 };

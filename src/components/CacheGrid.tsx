@@ -24,14 +24,18 @@ import { createElement, useState } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { parse } from "svg-parser";
 
-const PDFQrCode = (props) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const PDFQrCode = (props: any) => {
   const qrNode = createElement(QRCode, props);
   const markup = renderToStaticMarkup(qrNode);
   const nodes = parse(markup);
   return handleNode(nodes);
 };
 
-const svgMappings = {
+const svgMappings: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+} = {
   svg: Svg,
   path: Path,
   rect: Rect,
@@ -48,6 +52,7 @@ const svgMappings = {
   radialGradient: RadialGradient,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleNode = (node: any) => {
   const children = node.children.map(handleNode);
 
@@ -104,15 +109,15 @@ const CacheDocument = ({ caches }: { caches: Cache[] }) => {
 };
 
 export const CacheGrid = () => {
-  const [instance, updateInstance] = usePDF({
+  const [instance] = usePDF({
     document: <CacheDocument caches={caches} />,
   });
 
   if (instance.loading) return <span>Loading...</span>;
-  if (instance.error) return <span>{instance.error.message}</span>;
+  if (instance.error) return <span>{instance.error}</span>;
   return (
     <>
-      <a href={instance.url} target="_blank">
+      <a href={instance.url || ""} target="_blank">
         Print PDF of Caches
       </a>
       <WebCacheGrid />
@@ -121,11 +126,6 @@ export const CacheGrid = () => {
 };
 
 const WebCacheGrid = () => {
-  let pdfCaches = caches.map((cache) => {
-    return <PDFQrCode value={cache.link} size={256} />;
-  });
-  console.log("pdfCaches", pdfCaches);
-
   return (
     <ul
       role="list"

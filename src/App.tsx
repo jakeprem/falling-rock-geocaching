@@ -1,4 +1,5 @@
 import { CacheGrid } from "./components/CacheGrid";
+import { DownloadPDF } from "./components/DownloadPDF";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
               <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
                 Camp Falling Rock - Geocaching
               </h1>
+              <DownloadPDF />
             </div>
           </header>
         </div>
